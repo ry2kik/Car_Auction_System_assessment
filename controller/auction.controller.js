@@ -1,7 +1,7 @@
 import { validateAuctionData } from "../utils/validation.js";
 import Auction from '../model/auction.model.js';
 import Dealer from "../model/dealer.model.js";
-import User from '../model/user.model.js';
+// import User from '../model/user.model.js';
 import Bid from '../model/bid.model.js';
 import Car from '../model/car.model.js';
 
@@ -51,15 +51,20 @@ export const startAuctionController = async (req, res) => {
 
 export const createDealerController = async (req, res) => {
     try {
-        const { name, email } = req.body;
-        if (!name || !email)
+        const { userName, email, password, role } = req.body;
+        if (!userName || !email || !password)
             return res.status(400).json({ message: "All the fields should be filled" });
 
         const exist = await Dealer.findOne({ email: email });
         if (exist)
             return res.status(400).json({ message: "Dealer already exist" });
 
-        const dealer = new Dealer({ name, email });
+        const dealer = new Dealer({ 
+            userName, 
+            email, 
+            password,
+            role: role ? "Admin" : "User" 
+        });
         await dealer.save();
         return res.status(201).json({ message: "New Dealer created", dealer });
     } catch (error) {
@@ -111,14 +116,18 @@ export const placeBidsController = async (req, res) => {
     }
 }
 
-export const genarateToken = (req, res) => {
+export const genarateToken = async (req, res) => {
     try {
-        const { userName, password } = req.body;
-        if (!userName || !password)
+        const { userName, role, password } = req.body;
+        if (!userName || !role || !password)
             return res.status(400).json({ message: 'All the fields should be filled' });
         
-        if (userName == 'Admin' && password == 'Admin') {
-            const token = User.getJWT();
+        const dealer = await Dealer.findOne({ userName });
+        if (!dealer) 
+            return res.status(400).json({ message: "Dealer doesn't exist" });
+
+        if (role == 'Admin' && password == 'Admin') {
+            const token = await dealer.getJWT();
             return res.status(200).json({ message: "Token granted successfully", token });
         }
 
