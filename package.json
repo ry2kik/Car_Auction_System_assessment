@@ -1,0 +1,24 @@
+{
+  "name": "car_auction_system_assessment",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ry2kik/Car_Auction_System_assessment.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ry2kik/Car_Auction_System_assessment/issues"
+  },
+  "homepage": "https://github.com/ry2kik/Car_Auction_System_assessment#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
